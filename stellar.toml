@@ -1,0 +1,13 @@
+FEDERATION_SERVER="https://url.to/federation"
+
+# The endpoint used for the compliance protocol
+AUTH_SERVER="https://api.stellar.org/auth"
+
+# The signing key is used for the compliance protocol
+SIGNING_KEY="GBBHQ7H4V6RRORKYLHTCAWP6MOHNORRFJSDPXDFYDGJB2LPZUFPXUEW3"
+
+
+[[CURRENCIES]]
+code="USD"
+issuer="GCZJM35NKGVK47BB4SPBDV25477PZYIYPVVG453LPYFNXLS3FGHDXOCM"
+display_decimals=2 # Specifies how many decimal places should be displayed by clients to end users.
