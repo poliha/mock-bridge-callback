@@ -48,6 +48,31 @@ module.exports = {
               };
       return res.status(200).send(rp);
     });
+    
+    app.get('/.well-known/stellar.toml',function(req, res) {
+      console.log("---stellar.toml---\n");
+      console.log(req.query);
+     
+      var options = {
+        root: __dirname,
+        dotfiles: 'deny',
+        headers: {
+            'Access-Control-Allow-Origin': "*",
+            'x-timestamp': Date.now(),
+            'x-sent': true
+        }
+      };
+    
+      var fileName = "stellar.toml";
+      res.sendFile(fileName, options, function (err) {
+        if (err) {
+          next(err);
+        } else {
+          console.log('Sent:', fileName);
+        }
+      });
+    
+    });
 
 
   }
