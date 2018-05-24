@@ -1,3 +1,45 @@
+var moment = require('moment');
+var net = require('net');
+
+const NODE_ERROR = -1;
+const NODE_TIMEOUT = -2;
+
+function checkNode(node) {
+  return new Promise((resolve, reject) => {
+    let client = new net.Socket();
+    let start = moment();
+    client.setTimeout(10 * 1000);
+    console.log("checkNode: connecting to: " + node.host)
+
+    client.connect(node.port, node.host, function () {
+      client.end();
+      console.log("connected");
+      resolve({
+        id: node.id,
+        connectedIn: moment().diff(start)
+      });
+    });
+
+    client.on('error', () => {
+      client.end();
+      console.log("error");
+      resolve({
+        id: node.id,
+        connectedIn: NODE_ERROR
+      });
+    });
+
+    client.on('timeout', () => {
+      client.end();
+      console.log("timeout");
+      resolve({
+        id: node.id,
+        connectedIn: NODE_TIMEOUT
+      });
+    });
+  });
+}
+
 module.exports = {
   configure: function(app) {
 
@@ -48,7 +90,20 @@ module.exports = {
               };
       return res.status(200).send(rp);
     });
-    
+
+    app.get('/check-node/:port/:host', function (req, res) {
+      console.log("---CHECK NODE---\n");
+      console.log(req.params);
+
+      var node = {
+        "id": "007", 
+        "host": req.params.host,
+        "port": req.params.port
+      };
+      checkNode(node);
+      // return res.status(200).send(checkNode(node));
+    });
+
     app.get('/.well-known/stellar.toml',function(req, res) {
       console.log("---stellar.toml---\n");
       console.log(req.query);
